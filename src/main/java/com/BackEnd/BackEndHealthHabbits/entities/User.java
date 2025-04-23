@@ -33,6 +33,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
+    @OneToMany(mappedBy = "user")
+    private List<Habbit> habbitList;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

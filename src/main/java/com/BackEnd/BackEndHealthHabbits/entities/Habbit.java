@@ -35,4 +35,7 @@ public class Habbit {
     @Column
     private Integer point_value;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
