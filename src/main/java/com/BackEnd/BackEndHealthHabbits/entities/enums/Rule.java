@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public enum Rule {
-    VIEW_PROFILE(1, "Visualizar Perfil"),
-    UPDATE_PROFILE(2, "Criar Perfil",Arrays.asList(VIEW_PROFILE));
+    VIEW_APP(2, ""),
+    UPDATE_APP(1, "", Arrays.asList(VIEW_APP));
 
     private final String label;
     private final int value;
