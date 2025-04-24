@@ -27,9 +27,9 @@ public class UserAccountService {
 
     @Transactional
     public User createUser(@Valid UserDTO userDTO) {
-        // Verificar se já existe um usuário com o mesmo username
-        if (userAccountRepository.existsByName(userDTO.username())) {
-            throw new AlreadyExists("Já existe um usuário com esse CPF.");
+        // Verificar se já existe um usuário com o mesmo email
+        if (userAccountRepository.existsByEmail(userDTO.email())) {
+            throw new AlreadyExists("Já existe um usuário com esse Email.");
         }
         // Buscar o perfil no banco de dados
         Profile profile = profileRepository.findById(userDTO.profileId())
@@ -38,8 +38,8 @@ public class UserAccountService {
         // Criptografar a senha
         String encryptedPassword = passwordEncoder.encode(userDTO.password());
 
-        // Criar o novo usuário passando username e perfil na ordem correta
-        User user = new User(userDTO.username(), encryptedPassword, profile);
+        // Criar o novo usuário passando email e perfil na ordem correta
+        User user = new User(userDTO.email(), encryptedPassword, profile);
 
         // Salvar o usuário no banco de dados
         return userAccountRepository.save(user);

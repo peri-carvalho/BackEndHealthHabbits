@@ -24,6 +24,9 @@ public class User implements UserDetails {
     private Long id;
 
     @Column
+    private String email;
+
+    @Column
     private String name;
 
     //@JsonIgnore
