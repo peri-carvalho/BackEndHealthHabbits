@@ -56,8 +56,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = recoverToken(request);
         if (token != null) {
-            String name = tokenService.validateToken(token);
-            if (name == null) {
+            String email = tokenService.validateToken(token);
+            if (email == null) {
                 // Token inválido ou expirado
                 SecurityContextHolder.clearContext();
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -91,7 +91,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Monta o objeto de usuário para injetar no Spring Security Context
             User user = new User();
-            user.setName(name);
+            user.setEmail(email);
             user.setProfileName(profileName);
             user.setAuthorities(expandedAuthorities);
 

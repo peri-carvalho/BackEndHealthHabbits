@@ -6,14 +6,12 @@ import lombok.Data;
 public class LoginResponseDTO {
 
     private TokenResponseDTO tokenResponse;
-    private boolean firstLogin;
 
     public LoginResponseDTO() {
     }
 
     // Construtor que recebe TokenResponseDTO + boolean
-    public LoginResponseDTO(TokenResponseDTO tokenResponse, boolean firstLogin) {
+    public LoginResponseDTO(TokenResponseDTO tokenResponse) {
         this.tokenResponse = tokenResponse;
-        this.firstLogin = firstLogin;
     }
 }

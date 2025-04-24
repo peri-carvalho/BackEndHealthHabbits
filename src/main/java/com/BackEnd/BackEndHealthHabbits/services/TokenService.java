@@ -38,7 +38,7 @@ public class TokenService {
     private UserRepository userRepository;
 
     public TokenResponseDTO obterToken(@Valid AuthenticationDTO authenticationDTO) {
-        User user = userRepository.findByName(authenticationDTO.username())
+        User user = userRepository.findByEmail(authenticationDTO.email())
                 .orElseThrow(() -> new UnauthorizedException("User not found", HttpStatus.UNAUTHORIZED));
 
         return TokenResponseDTO.builder()
@@ -106,8 +106,8 @@ public class TokenService {
     }
 
     public TokenResponseDTO obterRefreshToken(String refreshToken) {
-        String name = validateToken(refreshToken);
-        User user = userRepository.findByName(name)
+        String email = validateToken(refreshToken);
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UnauthorizedException("User not found", HttpStatus.UNAUTHORIZED));
 
         return TokenResponseDTO.builder()
