@@ -4,6 +4,7 @@ import com.BackEnd.BackEndHealthHabbits.dto.UserDTO;
 import com.BackEnd.BackEndHealthHabbits.entities.Profile;
 import com.BackEnd.BackEndHealthHabbits.entities.User;
 import com.BackEnd.BackEndHealthHabbits.infra.exceptions.AlreadyExists;
+import com.BackEnd.BackEndHealthHabbits.infra.exceptions.DataIntegrityCustomException;
 import com.BackEnd.BackEndHealthHabbits.infra.exceptions.NotFound;
 import com.BackEnd.BackEndHealthHabbits.repositories.ProfileRepository;
 import com.BackEnd.BackEndHealthHabbits.repositories.UserRepository;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 public class UserAccountService {
@@ -30,6 +33,10 @@ public class UserAccountService {
         // Verificar se já existe um usuário com o mesmo email
         if (this.userAccountRepository.existsByEmail(userDTO.getEmail())) {
             throw new AlreadyExists("Já existe um usuário com esse Email.");
+        }
+        System.out.println(userDTO);
+        if(!(Objects.equals(userDTO.getPassword(), userDTO.getConfirmPassword()))) {
+            throw new DataIntegrityCustomException("Confirme sua senha.");
         }
         // Buscar o perfil no banco de dados
         Profile profile = this.profileRepository.findById(userDTO.getProfileId())
