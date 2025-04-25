@@ -26,22 +26,23 @@ public class UserAccountService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public User createUser(@Valid UserDTO userDTO) {
+    public UserDTO createUser(@Valid UserDTO userDTO) {
         // Verificar se já existe um usuário com o mesmo email
-        if (userAccountRepository.existsByEmail(userDTO.email())) {
+        if (this.userAccountRepository.existsByEmail(userDTO.getEmail())) {
             throw new AlreadyExists("Já existe um usuário com esse Email.");
         }
         // Buscar o perfil no banco de dados
-        Profile profile = profileRepository.findById(userDTO.profileId())
+        Profile profile = this.profileRepository.findById(userDTO.getProfileId())
                 .orElseThrow(() -> new NotFound("Perfil não encontrado"));
 
         // Criptografar a senha
-        String encryptedPassword = passwordEncoder.encode(userDTO.password());
+        String encryptedPassword = this.passwordEncoder.encode(userDTO.getPassword());
 
         // Criar o novo usuário passando email e perfil na ordem correta
-        User user = new User(userDTO.email(), encryptedPassword, profile);
+        User user = new User(userDTO.getEmail(), encryptedPassword, profile);
 
+        this.userAccountRepository.save(user);
         // Salvar o usuário no banco de dados
-        return userAccountRepository.save(user);
+        return new UserDTO(user);
     }
 }

@@ -32,7 +32,7 @@ public class User implements UserDetails {
     //@JsonIgnore
     private String password;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
