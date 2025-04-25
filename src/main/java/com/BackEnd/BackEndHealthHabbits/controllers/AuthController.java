@@ -54,7 +54,6 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasAuthority('UPDATE_USER')")
     public ResponseEntity<?> register(@RequestBody @Valid UserDTO userDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userAccountService.createUser(userDTO));
     }
