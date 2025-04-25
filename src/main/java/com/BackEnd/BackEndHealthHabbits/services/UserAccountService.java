@@ -39,7 +39,7 @@ public class UserAccountService {
         String encryptedPassword = this.passwordEncoder.encode(userDTO.getPassword());
 
         // Criar o novo usuário passando email e perfil na ordem correta
-        User user = new User(userDTO.getEmail(), encryptedPassword, profile);
+        User user = new User(userDTO.getEmail(),userDTO.getName(), encryptedPassword, profile);
 
         this.userAccountRepository.save(user);
         // Salvar o usuário no banco de dados

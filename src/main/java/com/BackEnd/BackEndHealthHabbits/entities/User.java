@@ -49,7 +49,8 @@ public class User implements UserDetails {
     @Transient
     private String profileName;
 
-    public User(String name, String password, Profile profile) {
+    public User(String email, String name, String password, Profile profile) {
+        this.email = email;
         this.name = name;
         this.password = password;
         this.profile = profile;
