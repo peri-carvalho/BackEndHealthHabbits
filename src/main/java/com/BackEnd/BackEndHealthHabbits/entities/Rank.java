@@ -21,11 +21,11 @@ public class Rank {
     private Long id;
 
     @Column
-    private Integer point_value;
+    private Integer pointValue;
 
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "user_id")
-    private List<User> user;
+    private User user;
 
     @Column(name = "updated_at")
     @UpdateTimestamp

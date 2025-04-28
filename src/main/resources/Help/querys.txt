@@ -1,0 +1,25 @@
+-- Inserir o perfil 'Administrador'
+INSERT INTO tb_profile (id, name)
+VALUES
+(1, 'User');
+
+-- Associar as regras ao perfil 'Administrador'
+INSERT INTO tb_profile_rules (profile_id, rule)
+VALUES
+(1, 'VIEW_APP'),
+(1, 'UPDATE_APP');
+
+
+-- Inserir o usuário 'Administrador do Sistema'
+INSERT INTO tb_users (email, password, profile_id, name, created_at, updated_at)
+VALUES
+('healthhabbit@gmail.com', -- email
+ '$2y$10$810FwZ0GW5/6rR5nyzvb9OEis36ty3Kz7BguNlMbp5nIpVMi1N02O', -- senha criptografada   https://bcrypt.online/
+  1,
+  'UserHealthHabbit',
+  NOW(),
+  NOW()
+);
+
+
+

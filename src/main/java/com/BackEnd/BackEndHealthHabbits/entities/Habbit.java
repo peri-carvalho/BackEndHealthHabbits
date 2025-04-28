@@ -3,6 +3,9 @@ package com.BackEnd.BackEndHealthHabbits.entities;
 import com.BackEnd.BackEndHealthHabbits.entities.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.Instant;
 
 @Entity
 @Table(name = "tb_habbits")
@@ -27,15 +30,19 @@ public class Habbit {
     private Category category;
 
     @Column
-    private Integer recommended_quantity;
+    private Integer recommendedQuantity;
 
     @Column
-    private Integer recommended_duration;
+    private Integer recommendedDuration;
 
     @Column
-    private Integer point_value;
+    private Integer pointValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable= false)
     private User user;
+
+    @CreationTimestamp
+    @Column(name = "performed_at", updatable = false, nullable = false)
+    private Instant performedAt;
 }

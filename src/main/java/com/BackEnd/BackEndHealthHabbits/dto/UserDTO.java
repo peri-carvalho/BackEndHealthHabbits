@@ -21,7 +21,7 @@ public class UserDTO {
 
         private String name;
 
-        @Pattern(regexp = "^(?=.*[!@#$%^&*()_+{}\\[\\]:;\"'<>?,./\\\\|-])[A-Za-z\\d!@#$%^&*()_+{}\\[\\]:;\"'<>?,./\\\\|-]{1,8}$", message = "Senha Inválida")
+        @Pattern(regexp = "^(?=.*[!@#$%^&*()_+{}\\[\\]:;\"'<>?,./\\\\|-])[A-Za-z\\d!@#$%^&*()_+{}\\[\\]:;\"'<>?,./\\\\|-]{1,8}$", message = "Senha deve conter 8 digitos com um caractere especial.")
         private String password;
 
         @JsonProperty(access = JsonProperty.Access.READ_WRITE)
