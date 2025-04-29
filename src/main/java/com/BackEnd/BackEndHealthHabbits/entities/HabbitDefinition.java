@@ -1,18 +1,17 @@
 package com.BackEnd.BackEndHealthHabbits.entities;
 
 import com.BackEnd.BackEndHealthHabbits.entities.enums.Category;
-import com.BackEnd.BackEndHealthHabbits.entities.enums.Rarity;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "tb_achievement")
+@Table(name = "tb_habbit_def")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Achievement {
+public class HabbitDefinition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,19 +21,18 @@ public class Achievement {
     private String name;
 
     @Column
-    private Category category;
-
-    @Column
-    private Rarity rarity;
-
-    @Column
     private String description;
 
     @Column
-    private Integer required_quantity;
+    private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable= false)
-    private User user;
+    @Column
+    private Integer recommendedQuantity;
+
+    @Column
+    private Integer recommendedDuration;
+
+    @Column
+    private Integer pointValue;
 
 }

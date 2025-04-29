@@ -1,12 +1,18 @@
 package com.BackEnd.BackEndHealthHabbits.services;
 
+import java.security.Principal;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.BackEnd.BackEndHealthHabbits.dto.ConfirmHabbitRequestDTO;
+import com.BackEnd.BackEndHealthHabbits.dto.HabbitHistoryDTO;
+import com.BackEnd.BackEndHealthHabbits.entities.HabbitDefinition;
+import com.BackEnd.BackEndHealthHabbits.repositories.HabbitDefinitionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.BackEnd.BackEndHealthHabbits.dto.ConfirmHabbitRequestDTO;
 import com.BackEnd.BackEndHealthHabbits.entities.Habbit;
 import com.BackEnd.BackEndHealthHabbits.entities.Rank;
 import com.BackEnd.BackEndHealthHabbits.entities.User;
@@ -16,52 +22,46 @@ import com.BackEnd.BackEndHealthHabbits.repositories.UserRepository;
 
 @Service
 public class HabbitService {
-
-    private final UserRepository userRepo;
-    private final HabbitRepository habbitRepo;
-    private final RankRepository rankRepo;
+    private final UserRepository              userRepo;
+    private final HabbitDefinitionRepository defRepo;
+    private final HabbitRepository            habbitRepo;
+    private final RankRepository              rankRepo;
 
     public HabbitService(UserRepository userRepo,
+                         HabbitDefinitionRepository defRepo,
                          HabbitRepository habbitRepo,
                          RankRepository rankRepo) {
-        this.userRepo = userRepo;
+        this.userRepo   = userRepo;
+        this.defRepo    = defRepo;
         this.habbitRepo = habbitRepo;
-        this.rankRepo = rankRepo;
+        this.rankRepo   = rankRepo;
     }
 
     @Transactional
     public void confirmHabbit(ConfirmHabbitRequestDTO req) {
         User user = userRepo.findById(req.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado: " + req.getUserId()));
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
-        habbitRepo.findTopByUserAndNameOrderByPerformedAtDesc(user, req.getName())
+        HabbitDefinition def = defRepo.findById(req.getHabbitId())
+                .orElseThrow(() -> new IllegalArgumentException("Hábito não definido"));
+
+        habbitRepo.findTopByUserIdAndDefinitionIdOrderByPerformedAtDesc(user.getId(), def.getId())
                 .ifPresent(last -> {
-                    Duration sinceLast = Duration.between(last.getPerformedAt(), Instant.now());
-                    if (sinceLast.toHours() < 24) {
+                    Duration since = Duration.between(last.getPerformedAt(), Instant.now());
+                    if (since.toHours() < 24) {
                         throw new IllegalStateException(
-                                "Você só pode confirmar o hábito \""
-                                        + req.getName()
-                                        + "\" uma vez a cada 24 horas. Faltam "
-                                        + (24 - sinceLast.toHours())
-                                        + "h para poder confirmar novamente."
+                                "Você só pode repetir este hábito após 24h. Faltam "
+                                        + (24 - since.toHours()) + "h."
                         );
                     }
                 });
 
-        Habbit habbit = new Habbit();
-        habbit.setUser(user);
-        habbit.setName(req.getName());
-        habbit.setDescription(req.getDescription());
-        habbit.setCategory(req.getCategory());
-        habbit.setRecommendedQuantity(req.getRecommendedQuantity());
-        habbit.setRecommendedDuration(req.getRecommendedDuration());
-        habbit.setPointValue(req.getPointValue());
-        habbitRepo.save(habbit);
+        Habbit exec = new Habbit();
+        exec.setUser(user);
+        exec.setDefinition(def);
+        exec.setPointValue(def.getPointValue());
+        habbitRepo.save(exec);
 
-        updateRank(user, req.getPointValue());
-    }
-
-    private void updateRank(User user, Integer earnedPoints) {
         Rank rank = rankRepo.findByUser(user)
                 .orElseGet(() -> {
                     Rank r = new Rank();
@@ -69,7 +69,19 @@ public class HabbitService {
                     r.setPointValue(0);
                     return r;
                 });
-        rank.setPointValue(rank.getPointValue() + earnedPoints);
+        rank.setPointValue(rank.getPointValue() + def.getPointValue());
         rankRepo.save(rank);
+    }
+
+    @Transactional(readOnly = true)
+    public List<HabbitHistoryDTO> getHistory(Long userId) {
+        return habbitRepo.findByUserIdOrderByPerformedAtDesc(userId)
+                .stream()
+                .map(h -> new HabbitHistoryDTO(
+                        h.getDefinition().getName(),
+                        h.getPerformedAt(),
+                        h.getPointValue()
+                ))
+                .collect(Collectors.toList());
     }
 }

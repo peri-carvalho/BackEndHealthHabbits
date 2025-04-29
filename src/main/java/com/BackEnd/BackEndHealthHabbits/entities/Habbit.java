@@ -8,7 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "tb_habbits")
+@Table(name = "tb_user_habbit")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,33 +16,23 @@ import java.time.Instant;
 @EqualsAndHashCode
 public class Habbit {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String name;
-
-    @Column
-    private String description;
-
-    @Column
-    private Category category;
-
-    @Column
-    private Integer recommendedQuantity;
-
-    @Column
-    private Integer recommendedDuration;
-
-    @Column
-    private Integer pointValue;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable= false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "habbit_def_id")
+    private HabbitDefinition definition;
 
     @CreationTimestamp
     @Column(name = "performed_at", updatable = false, nullable = false)
     private Instant performedAt;
+
+    // quantos pontos valeu naquela execução
+    @Column(name = "point_value", nullable = false)
+    private Integer pointValue;
+
 }

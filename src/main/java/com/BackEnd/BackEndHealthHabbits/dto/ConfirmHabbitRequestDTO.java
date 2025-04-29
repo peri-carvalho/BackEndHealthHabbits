@@ -8,10 +8,5 @@ import lombok.Setter;
 @Setter
 public class ConfirmHabbitRequestDTO {
     private Long userId;
-    private String name;
-    private String description;
-    private Category category;
-    private Integer recommendedQuantity;
-    private Integer recommendedDuration;
-    private Integer pointValue;
+    private Long habbitId;
 }
