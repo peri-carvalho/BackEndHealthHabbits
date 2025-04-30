@@ -1,6 +1,5 @@
 package com.BackEnd.BackEndHealthHabbits.services;
 
-import java.security.Principal;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.stream.Collectors;
 import com.BackEnd.BackEndHealthHabbits.dto.ConfirmHabbitRequestDTO;
 import com.BackEnd.BackEndHealthHabbits.dto.HabbitHistoryDTO;
 import com.BackEnd.BackEndHealthHabbits.entities.HabbitDefinition;
-import com.BackEnd.BackEndHealthHabbits.entities.enums.Category;
 import com.BackEnd.BackEndHealthHabbits.repositories.HabbitDefinitionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +25,18 @@ public class HabbitService {
     private final HabbitDefinitionRepository defRepo;
     private final HabbitRepository            habbitRepo;
     private final RankRepository              rankRepo;
+    private final AchievementService          achievementService;
 
     public HabbitService(UserRepository userRepo,
                          HabbitDefinitionRepository defRepo,
                          HabbitRepository habbitRepo,
-                         RankRepository rankRepo) {
+                         RankRepository rankRepo,
+                         AchievementService achievementService) {
         this.userRepo   = userRepo;
         this.defRepo    = defRepo;
         this.habbitRepo = habbitRepo;
         this.rankRepo   = rankRepo;
+        this.achievementService  = achievementService;
     }
 
     @Transactional
@@ -60,29 +61,7 @@ public class HabbitService {
         Habbit exec = new Habbit();
         exec.setUser(user);
         exec.setDefinition(def);
-        exec.setPointValue(def.getPointValue());
         habbitRepo.save(exec);
-
-        Integer count = habbitRepo.countByDefinitionAndUser(req.getHabbitId(),req.getUserId());
-        if(count > 1){
-
-        }
-        if(count >= 10){
-
-        }
-        if(count >= 30 ){
-
-        }
-        if(count >= 60){
-
-        }
-        if(count >= 90){
-
-        }
-        if(count >= 200){
-
-        }
-
 
         Rank rank = rankRepo.findByUser(user)
                 .orElseGet(() -> {
@@ -93,6 +72,8 @@ public class HabbitService {
                 });
         rank.setPointValue(rank.getPointValue() + def.getPointValue());
         rankRepo.save(rank);
+
+        achievementService.awardAchievementsForUser(user.getId());
     }
 
     @Transactional(readOnly = true)
@@ -102,7 +83,7 @@ public class HabbitService {
                 .map(h -> new HabbitHistoryDTO(
                         h.getDefinition().getName(),
                         h.getPerformedAt(),
-                        h.getPointValue()
+                        h.getDefinition().getPointValue()
                 ))
                 .collect(Collectors.toList());
     }

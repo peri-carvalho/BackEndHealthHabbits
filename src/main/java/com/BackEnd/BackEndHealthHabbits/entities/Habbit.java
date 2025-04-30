@@ -1,6 +1,5 @@
 package com.BackEnd.BackEndHealthHabbits.entities;
 
-import com.BackEnd.BackEndHealthHabbits.entities.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,9 +29,5 @@ public class Habbit {
     @CreationTimestamp
     @Column(name = "performed_at", updatable = false, nullable = false)
     private Instant performedAt;
-
-    // quantos pontos valeu naquela execução
-    @Column(name = "point_value", nullable = false)
-    private Integer pointValue;
 
 }

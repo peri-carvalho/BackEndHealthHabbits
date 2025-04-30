@@ -29,7 +29,5 @@ public interface HabbitRepository extends JpaRepository<Habbit,Long> {
 
     // histórico completo do usuário, mais recentes primeiro
     List<Habbit> findByUserIdOrderByPerformedAtDesc(Long userId);
-
-    Integer countByDefinitionAndUser(Long habbitId, Long userId);
-
 }
+
