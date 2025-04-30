@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.BackEnd.BackEndHealthHabbits.dto.ConfirmHabbitRequestDTO;
 import com.BackEnd.BackEndHealthHabbits.dto.HabbitHistoryDTO;
 import com.BackEnd.BackEndHealthHabbits.entities.HabbitDefinition;
+import com.BackEnd.BackEndHealthHabbits.entities.enums.Category;
 import com.BackEnd.BackEndHealthHabbits.repositories.HabbitDefinitionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +62,27 @@ public class HabbitService {
         exec.setDefinition(def);
         exec.setPointValue(def.getPointValue());
         habbitRepo.save(exec);
+
+        Integer count = habbitRepo.countByDefinitionAndUser(req.getHabbitId(),req.getUserId());
+        if(count > 1){
+
+        }
+        if(count >= 10){
+
+        }
+        if(count >= 30 ){
+
+        }
+        if(count >= 60){
+
+        }
+        if(count >= 90){
+
+        }
+        if(count >= 200){
+
+        }
+
 
         Rank rank = rankRepo.findByUser(user)
                 .orElseGet(() -> {

@@ -15,7 +15,7 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API Mucuripe")
+                        .title("API HealthHabbit")
                         .version("1.0")
                         .description("Documentação da API usando WebFlux"))
                 .components(new Components()

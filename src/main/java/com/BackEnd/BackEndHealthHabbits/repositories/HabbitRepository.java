@@ -1,6 +1,7 @@
 package com.BackEnd.BackEndHealthHabbits.repositories;
 
 import com.BackEnd.BackEndHealthHabbits.entities.Habbit;
+import com.BackEnd.BackEndHealthHabbits.entities.HabbitDefinition;
 import com.BackEnd.BackEndHealthHabbits.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,5 +29,7 @@ public interface HabbitRepository extends JpaRepository<Habbit,Long> {
 
     // histórico completo do usuário, mais recentes primeiro
     List<Habbit> findByUserIdOrderByPerformedAtDesc(Long userId);
+
+    Integer countByDefinitionAndUser(Long habbitId, Long userId);
 
 }
