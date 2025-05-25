@@ -56,11 +56,12 @@ public class TokenService {
 
             // Iniciando a construção do token
             JWTCreator.Builder jwtBuilder = JWT.create()
-                    .withIssuer("auth-pjapi")
+                    .withIssuer("auth-hbtapi")
                     .withSubject(user.getUsername())
                     .withClaim("profile", user.getProfile().getName())
                     .withClaim("roles", roles)
                     .withClaim("name",user.getName())
+                    .withClaim("email", user.getEmail())
                     .withExpiresAt(generateExpirationDate(expirationHours));
 
             // Assinando o token

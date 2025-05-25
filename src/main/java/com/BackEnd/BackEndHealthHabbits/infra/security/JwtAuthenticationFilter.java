@@ -84,7 +84,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Set<Rule> expandedRules = PermissionUtils.expandRules(userRules);
 
             // Converte as regras para GrantedAuthority
-            // OBS: Use List<GrantedAuthority> em vez de var
             List<GrantedAuthority> expandedAuthorities = expandedRules.stream()
                     .map(rule -> new org.springframework.security.core.authority.SimpleGrantedAuthority(rule.name()))
                     .collect(Collectors.toList());
